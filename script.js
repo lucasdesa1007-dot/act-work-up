@@ -138,16 +138,30 @@
         const original = submitter.textContent;
         submitter.textContent = 'Concluído ✓';
         submitter.disabled = true;
-        setTimeout(() => { submitter.textContent = original; submitter.disabled = false; }, 1800);
+        setTimeout(() => {
+          if (form.matches('[data-service-form]')) {
+            form.reset();
+            form.closest('dialog').close();
+          }
+          submitter.textContent = original;
+          submitter.disabled = false;
+        }, 1800);
       }
     });
   });
 
-  // "+ Adicionar serviços": leva ao formulário de publicação.
-  document.querySelector('[data-scroll-form]')?.addEventListener('click', () => {
-    const firstField = document.querySelector('#meus-servicos .panel form input');
-    firstField?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    firstField?.focus({ preventScroll: true });
+  const serviceDialog = document.getElementById('service-dialog');
+  document.querySelectorAll('[data-open-service-dialog]').forEach(button => {
+    button.addEventListener('click', () => {
+      serviceDialog.showModal();
+      document.getElementById('service-title').focus();
+    });
+  });
+  document.querySelectorAll('[data-close-service-dialog]').forEach(button => {
+    button.addEventListener('click', () => serviceDialog.close());
+  });
+  serviceDialog.addEventListener('click', event => {
+    if (event.target === serviceDialog) serviceDialog.close();
   });
 
   // Busca inicial: começa na tela de login, preservando o fluxo de autenticação.
