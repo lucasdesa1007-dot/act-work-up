@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#5101D4">
+  <title>Cadastro de empresa — act Work&amp;Up</title>
+  <meta name="description" content="Cadastre sua empresa no act Work&amp;Up.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css?v=6">
+</head>
+<body>
+  <main class="auth-screen active">
+    <section class="auth-card auth-card-tall">
+      <a class="auth-brand" href="/login">
+        <img src="/assets/logo-wolfservices.jpg" alt="">
+        <span>act Work&amp;Up</span>
+      </a>
+      <nav class="auth-tabs" aria-label="Acesso">
+        <a class="tab" href="/login">Login</a>
+        <span class="tab active" aria-current="page">Cadastro</span>
+      </nav>
+      <a class="back-link" href="/cadastro-tipo">← Alterar tipo de conta</a>
+      <p class="eyebrow">Cadastro de empresa</p>
+      <h1 class="registration-title">Cadastrar</h1>
+      <form class="form-grid" data-local-form>
+        <label>
+          Nome fantasia
+          <input name="company-name" autocomplete="organization" placeholder="Nome da empresa" required>
+        </label>
+        <label>
+          CNPJ
+          <input name="cnpj" inputmode="numeric" autocomplete="off" placeholder="00.000.000/0000-00" required>
+        </label>
+        <label class="span-2">
+          Endereço
+          <input name="address" autocomplete="street-address" placeholder="Endereço comercial">
+        </label>
+        <label>
+          Telefone de contato
+          <input name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="(00) 00000-0000">
+        </label>
+        <label>
+          Email de contato
+          <input name="email" type="email" autocomplete="email" placeholder="contato@empresa.com" required>
+        </label>
+        <label>
+          Senha
+          <input name="password" type="password" autocomplete="new-password" data-password required>
+        </label>
+        <label>
+          Confirmar senha
+          <input name="password-confirmation" type="password" autocomplete="new-password" data-password-confirm required>
+        </label>
+        <div class="form-actions span-2">
+          <a class="btn outline" href="/cadastro-tipo">Cancelar</a>
+          <button class="btn primary" type="submit" data-screen="inicio">Criar conta</button>
+        </div>
+      </form>
+    </section>
+  </main>
+  <script src="/script.js?v=6"></script>
+</body>
+</html>

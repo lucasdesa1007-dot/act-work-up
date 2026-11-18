@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/style.css?v=5">
+  <link rel="stylesheet" href="/style.css?v=6">
 </head>
 <body>
   <div id="app">
@@ -21,7 +21,7 @@
         </span>
       </a>
       <nav class="main-nav" aria-label="Navegação principal">
-        <a href="/inicio" class="nav-link active">
+        <a href="/inicio" class="nav-link">
           <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
             aria-hidden="true">
             <path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-6v-7h-4v7H4a1 1 0 0 1-1-1V10Z" />
@@ -36,7 +36,7 @@
           </svg>
           Explorar
         </a>
-        <a href="/meus-servicos" class="nav-link">
+        <a href="/meus-servicos" class="nav-link active" aria-current="page">
           <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
             aria-hidden="true">
             <rect x="3" y="4" width="18" height="16" rx="2" />
@@ -168,8 +168,8 @@
             <strong>
               Sob orçamento
             </strong>
-            <a href="/perfil" class="inline-action">
-              Alterar →
+            <a href="/servico?service=manutencao-residencial" class="inline-action">
+              Ver serviço →
             </a>
           </div>
         </article>
@@ -283,6 +283,6 @@
       </span>
     </footer>
   </div>
-  <script src="/script.js?v=5"></script>
+  <script src="/script.js?v=6"></script>
 </body>
 </html>

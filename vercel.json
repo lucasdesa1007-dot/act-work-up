@@ -9,6 +9,9 @@
     { "source": "/meus-servicos", "destination": "/meus-servicos.html" },
     { "source": "/mensagens", "destination": "/mensagens.html" },
     { "source": "/perfil", "destination": "/perfil.html" },
-    { "source": "/login", "destination": "/login.html" }
+    { "source": "/login", "destination": "/login.html" },
+    { "source": "/cadastro-tipo", "destination": "/cadastro-tipo.html" },
+    { "source": "/cadastro-pessoal", "destination": "/cadastro-pessoal.html" },
+    { "source": "/cadastro-empresa", "destination": "/cadastro-empresa.html" }
   ]
 }

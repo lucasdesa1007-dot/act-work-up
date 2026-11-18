@@ -358,10 +358,6 @@
     iniciais: 'LS',
     avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=160&h=160&q=80'
   };
-  const telas = [...document.querySelectorAll('.screen')];
-  const cabecalho = document.getElementById('site-header');
-  const rodape = document.getElementById('site-footer');
-  const idsAutenticacao = new Set(['login', 'cadastro-tipo', 'cadastro-pessoal', 'cadastro-empresa']);
   const gradeExplorar = document.getElementById('explore-grid');
   const gradeInicio = document.querySelector('#inicio .service-grid');
   const gradeProfissionais = document.querySelector('.professional-grid');
@@ -625,13 +621,15 @@
     }));
 
     const linhasPagamento = document.querySelectorAll('#pagamento .summary-row strong');
-    const valorExato = servico.preco.toLocaleString('pt-BR', {
-      style: 'currency',
-      currency: 'BRL'
-    });
-    linhasPagamento[0].textContent = profissional.nome;
-    linhasPagamento[1].textContent = valorExato;
-    linhasPagamento[2].textContent = valorExato;
+    if (linhasPagamento.length >= 3) {
+      const valorExato = servico.preco.toLocaleString('pt-BR', {
+        style: 'currency',
+        currency: 'BRL'
+      });
+      linhasPagamento[0].textContent = profissional.nome;
+      linhasPagamento[1].textContent = valorExato;
+      linhasPagamento[2].textContent = valorExato;
+    }
     conversaAtual = profissional.id;
     renderizarConversas();
   }
@@ -778,8 +776,7 @@
       return;
     }
 
-    renderizarPerfil(servico);
-    window.location.href = '/servico';
+    window.location.href = `/servico?service=${encodeURIComponent(servico.id)}`;
   }
 
   function adicionarMensagem(tipo, texto) {
@@ -870,6 +867,10 @@
 
   const formularioFiltros = document.getElementById('filter-form');
   if (formularioFiltros) {
+    formularioFiltros.addEventListener('submit', evento => {
+      evento.preventDefault();
+      filtrarServicos();
+    });
     formularioFiltros.addEventListener('reset', () => {
       window.requestAnimationFrame(filtrarServicos);
     });
@@ -878,9 +879,8 @@
   document.querySelectorAll('[data-search-form]').forEach(formulario => {
     formulario.addEventListener('submit', evento => {
       evento.preventDefault();
-      campoBusca.value = formulario.querySelector('input').value;
-      window.location.href = '/explorar';
-      filtrarServicos();
+      const busca = formulario.querySelector('input').value.trim();
+      window.location.href = `/explorar${busca ? `?q=${encodeURIComponent(busca)}` : ''}`;
     });
   });
 
@@ -946,6 +946,9 @@
           'meus-servicos': '/meus-servicos',
           mensagens: '/mensagens',
           'perfil-publico': '/servico',
+          'cadastro-tipo': '/cadastro-tipo',
+          'cadastro-pessoal': '/cadastro-pessoal',
+          'cadastro-empresa': '/cadastro-empresa',
           login: '/login'
         };
         window.location.href = rotas[proximaTela] || '/inicio';
@@ -1003,7 +1006,9 @@
   renderizarCatalogo();
   const perfilPublico = document.getElementById('perfil-publico');
   if (perfilPublico) {
-    renderizarPerfil(servicos[0]);
+    const serviceId = new URLSearchParams(window.location.search).get('service');
+    const servico = servicos.find(item => item.id === serviceId) || servicos[0];
+    renderizarPerfil(servico);
   }
   const pagamento = document.getElementById('pagamento');
   if (pagamento) {
@@ -1014,4 +1019,35 @@
   document.querySelectorAll('.main-nav .nav-link').forEach(link => {
     link.classList.toggle('active', link.getAttribute('href') === rotaAtual);
   });
+
+  const buscaInicial = new URLSearchParams(window.location.search).get('q');
+  if (campoBusca && buscaInicial) {
+    campoBusca.value = buscaInicial;
+    filtrarServicos();
+  }
+
+  document.querySelectorAll('[data-demo-message]').forEach(botao => {
+    botao.addEventListener('click', () => {
+      const mensagem = document.getElementById(botao.dataset.demoMessage);
+      if (mensagem) {
+        mensagem.textContent = botao.dataset.message || 'Esta ação não está disponível nesta demonstração.';
+      }
+    });
+  });
+
+  const campoFotoPerfil = document.getElementById('profile-photo-input');
+  if (campoFotoPerfil) {
+    campoFotoPerfil.addEventListener('change', () => {
+      const arquivo = campoFotoPerfil.files?.[0];
+      if (!arquivo || !arquivo.type.startsWith('image/')) {
+        return;
+      }
+
+      const avatar = document.querySelector('.profile-edit .avatar');
+      const imagem = avatar?.querySelector('img');
+      if (imagem) {
+        imagem.src = URL.createObjectURL(arquivo);
+      }
+    });
+  }
 })();

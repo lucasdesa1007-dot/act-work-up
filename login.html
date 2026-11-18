@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/style.css?v=5">
+  <link rel="stylesheet" href="/style.css?v=6">
 </head>
 <body>
   <div id="app">
@@ -17,7 +17,7 @@
 <section class="screen auth-screen active" id="login" aria-label="Login">
       <div class="auth-card">
         <a class="auth-brand" href="/login">
-          <img src="assets/logo-wolfservices.jpg" alt="">
+          <img src="/assets/logo-wolfservices.jpg" alt="">
           <span>
             act Work&amp;Up
           </span>
@@ -26,7 +26,7 @@
           <button class="tab active" type="button">
             Login
           </button>
-          <a href="/login" class="tab">
+          <a href="/cadastro-tipo" class="tab">
             Cadastro
           </a>
         </div>
@@ -48,16 +48,17 @@
             Senha
             <input type="password" placeholder="Digite sua senha" autocomplete="current-password" required>
           </label>
-          <button class="text-action" type="button">
+          <button class="text-action" type="button" data-demo-message="password-help" data-message="A recuperação de senha não está habilitada nesta demonstração.">
             Esqueceu sua senha?
           </button>
-          <a href="/inicio" class="btn primary full">
+          <p class="form-feedback" id="password-help" role="status" aria-live="polite"></p>
+          <button type="submit" class="btn primary full" data-screen="inicio">
             Entrar
-          </a>
+          </button>
         </form>
         <p class="auth-foot">
           Ainda não tem conta?
-          <a href="/login" class="inline-action">
+          <a href="/cadastro-tipo" class="inline-action">
             Cadastre-se
           </a>
         </p>
@@ -65,6 +66,6 @@
     </section>
 
   </div>
-  <script src="/script.js?v=5"></script>
+  <script src="/script.js?v=6"></script>
 </body>
 </html>
