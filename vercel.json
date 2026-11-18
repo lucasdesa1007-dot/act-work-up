@@ -1,0 +1,14 @@
+{
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "rewrites": [
+    { "source": "/inicio", "destination": "/inicio.html" },
+    { "source": "/explorar", "destination": "/explorar.html" },
+    { "source": "/servico", "destination": "/servico.html" },
+    { "source": "/pagamento", "destination": "/pagamento.html" },
+    { "source": "/meus-servicos", "destination": "/meus-servicos.html" },
+    { "source": "/mensagens", "destination": "/mensagens.html" },
+    { "source": "/perfil", "destination": "/perfil.html" },
+    { "source": "/login", "destination": "/login.html" }
+  ]
+}

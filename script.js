@@ -489,9 +489,14 @@
   }
 
   function renderizarCatalogo() {
-    gradeExplorar.replaceChildren(...servicos.map(criarCardServico));
-    gradeInicio.replaceChildren(...servicos.slice(0, 4).map(criarCardServico));
-    gradeProfissionais.replaceChildren(...profissionais.map(profissional => {
+    if (gradeExplorar) {
+      gradeExplorar.replaceChildren(...servicos.map(criarCardServico));
+    }
+    if (gradeInicio) {
+      gradeInicio.replaceChildren(...servicos.slice(0, 4).map(criarCardServico));
+    }
+    if (gradeProfissionais) {
+      gradeProfissionais.replaceChildren(...profissionais.map(profissional => {
       const card = document.createElement('button');
       card.className = 'professional-card';
       card.type = 'button';
@@ -507,7 +512,8 @@
       definirAvaliacao(nota, profissional.nota);
       card.append(nome, local, nota);
       return card;
-    }));
+      }));
+    }
     filtrarServicos();
   }
 
@@ -631,6 +637,10 @@
   }
 
   function criarQrVisual() {
+    const espacoQr = document.querySelector('.qr-placeholder');
+    if (!espacoQr) {
+      return;
+    }
     const namespace = 'http://www.w3.org/2000/svg';
     const svg = document.createElementNS(namespace, 'svg');
     svg.setAttribute('viewBox', '0 0 29 29');
@@ -694,13 +704,15 @@
       }
     }
 
-    const espacoQr = document.querySelector('.qr-placeholder');
     espacoQr.replaceChildren(svg);
     espacoQr.setAttribute('aria-label', 'QR Code visual ilustrativo para demonstração');
   }
 
   function atualizarPagamento() {
     const status = document.querySelector('.payment-status');
+    if (!status) {
+      return;
+    }
     const titulo = status.querySelector('strong');
     const detalhe = status.querySelector('small');
     const icone = status.querySelector('.ui-icon');
@@ -717,32 +729,11 @@
     }, 7000);
   }
 
-  function mostrarTela(id) {
-    const destino = document.getElementById(id);
-    if (!destino) {
-      return;
-    }
-
-    telas.forEach(tela => tela.classList.toggle('active', tela === destino));
-    const autenticacao = idsAutenticacao.has(id);
-    cabecalho.style.display = autenticacao ? 'none' : 'flex';
-    rodape.style.display = autenticacao ? 'none' : '';
-    document.querySelectorAll('.nav-link').forEach(link => {
-      link.classList.toggle('active', link.dataset.screen === id);
-    });
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-
-    if (id === 'pagamento') {
-      atualizarPagamento();
-    }
-
-    if (id === 'mensagens') {
-      renderizarMensagens();
-    }
-  }
-
   /* Conversas, respostas automáticas e cópia da chave Pix */
   function renderizarMensagens() {
+    if (!listaConversas || !areaMensagens) {
+      return;
+    }
     const conversa = conversas.find(item => item.profissionalId === conversaAtual);
     const profissional = buscarProfissional(conversaAtual);
     document.getElementById('chat-provider-name').textContent = profissional.nome;
@@ -758,6 +749,9 @@
   }
 
   function renderizarConversas() {
+    if (!listaConversas) {
+      return;
+    }
     const titulo = listaConversas.querySelector('h2');
     const botoes = profissionais.map(profissional => {
       const botao = document.createElement('button');
@@ -785,7 +779,7 @@
     }
 
     renderizarPerfil(servico);
-    mostrarTela('perfil-publico');
+    window.location.href = '/servico';
   }
 
   function adicionarMensagem(tipo, texto) {
@@ -834,16 +828,6 @@
 
   document.addEventListener('click', event => {
     const alvo = event.target;
-    const navegacao = alvo.closest('[data-screen]');
-
-    if (navegacao) {
-      if (navegacao.type === 'submit' && navegacao.form) {
-        return;
-      }
-
-      event.preventDefault();
-      mostrarTela(navegacao.dataset.screen);
-    }
 
     const abrirPerfil = alvo.closest('[data-open-profile]');
     if (abrirPerfil) {
@@ -879,51 +863,60 @@
     });
   });
 
-  [campoBusca, filtroCategoria, filtroModalidade, filtroOrdenacao].forEach(controle => {
+  [campoBusca, filtroCategoria, filtroModalidade, filtroOrdenacao].filter(Boolean).forEach(controle => {
     controle.addEventListener('input', filtrarServicos);
     controle.addEventListener('change', filtrarServicos);
   });
 
-  document.getElementById('filter-form').addEventListener('reset', () => {
-    window.requestAnimationFrame(filtrarServicos);
-  });
+  const formularioFiltros = document.getElementById('filter-form');
+  if (formularioFiltros) {
+    formularioFiltros.addEventListener('reset', () => {
+      window.requestAnimationFrame(filtrarServicos);
+    });
+  }
 
   document.querySelectorAll('[data-search-form]').forEach(formulario => {
     formulario.addEventListener('submit', evento => {
       evento.preventDefault();
       campoBusca.value = formulario.querySelector('input').value;
-      mostrarTela('explorar');
+      window.location.href = '/explorar';
       filtrarServicos();
     });
   });
 
-  document.getElementById('message-form').addEventListener('submit', evento => {
-    evento.preventDefault();
-    const campo = document.getElementById('message-input');
-    const texto = campo.value.trim();
+  const formularioMensagem = document.getElementById('message-form');
+  if (formularioMensagem) {
+    formularioMensagem.addEventListener('submit', evento => {
+      evento.preventDefault();
+      const campo = document.getElementById('message-input');
+      const texto = campo.value.trim();
 
-    if (!texto) {
-      return;
-    }
-
-    const profissionalId = conversaAtual;
-    adicionarMensagem('sent', texto);
-    campo.value = '';
-    window.setTimeout(() => {
-      const resposta = buscarProfissional(profissionalId).respostas[0];
-      const conversa = conversas.find(item => item.profissionalId === profissionalId);
-      conversa.mensagens.push({ tipo: 'received', texto: resposta });
-
-      if (conversaAtual === profissionalId) {
-        renderizarMensagens();
-        areaMensagens.lastElementChild?.scrollIntoView({ behavior: 'smooth', block: 'end' });
+      if (!texto) {
+        return;
       }
-    }, 2500);
-  });
 
-  document.getElementById('copy-pix').addEventListener('click', evento => {
-    copiarChavePix(evento.currentTarget);
-  });
+      const profissionalId = conversaAtual;
+      adicionarMensagem('sent', texto);
+      campo.value = '';
+      window.setTimeout(() => {
+        const resposta = buscarProfissional(profissionalId).respostas[0];
+        const conversa = conversas.find(item => item.profissionalId === profissionalId);
+        conversa.mensagens.push({ tipo: 'received', texto: resposta });
+
+        if (conversaAtual === profissionalId) {
+          renderizarMensagens();
+          areaMensagens.lastElementChild?.scrollIntoView({ behavior: 'smooth', block: 'end' });
+        }
+      }, 2500);
+    });
+  }
+
+  const botaoCopiarPix = document.getElementById('copy-pix');
+  if (botaoCopiarPix) {
+    botaoCopiarPix.addEventListener('click', evento => {
+      copiarChavePix(evento.currentTarget);
+    });
+  }
 
   document.querySelectorAll('[data-local-form]').forEach(formulario => {
     const senhas = formulario.querySelectorAll('input[type="password"]');
@@ -946,7 +939,16 @@
 
       const proximaTela = evento.submitter?.dataset.screen;
       if (proximaTela) {
-        mostrarTela(proximaTela);
+        const rotas = {
+          inicio: '/inicio',
+          explorar: '/explorar',
+          pagamento: '/pagamento',
+          'meus-servicos': '/meus-servicos',
+          mensagens: '/mensagens',
+          'perfil-publico': '/servico',
+          login: '/login'
+        };
+        window.location.href = rotas[proximaTela] || '/inicio';
         return;
       }
 
@@ -970,23 +972,28 @@
   });
 
   const dialogoServico = document.getElementById('service-dialog');
-  document.querySelectorAll('[data-open-service-dialog]').forEach(botao => {
-    botao.addEventListener('click', () => {
-      dialogoServico.showModal();
-      document.getElementById('service-title').focus();
+  if (dialogoServico) {
+    document.querySelectorAll('[data-open-service-dialog]').forEach(botao => {
+      botao.addEventListener('click', () => {
+        dialogoServico.showModal();
+        document.getElementById('service-title')?.focus();
+      });
     });
-  });
-  document.querySelectorAll('[data-close-service-dialog]').forEach(botao => {
-    botao.addEventListener('click', () => dialogoServico.close());
-  });
-  dialogoServico.addEventListener('click', evento => {
-    if (evento.target === dialogoServico) {
-      dialogoServico.close();
-    }
-  });
+    document.querySelectorAll('[data-close-service-dialog]').forEach(botao => {
+      botao.addEventListener('click', () => dialogoServico.close());
+    });
+    dialogoServico.addEventListener('click', evento => {
+      if (evento.target === dialogoServico) {
+        dialogoServico.close();
+      }
+    });
+  }
 
-  document.getElementById('pix-key').value = 'chave-pix-demo@actworkup.com.br';
-  document.querySelector('.payment-status').setAttribute('role', 'status');
+  const campoPix = document.getElementById('pix-key');
+  if (campoPix) {
+    campoPix.value = 'chave-pix-demo@actworkup.com.br';
+  }
+  document.querySelector('.payment-status')?.setAttribute('role', 'status');
   document.querySelectorAll('.user-menu .avatar, .account-mini .avatar, .profile-edit .avatar').forEach(avatar => {
     renderizarAvatarComFallback(avatar, perfilUsuario);
   });
@@ -994,5 +1001,17 @@
   renderizarConversas();
   renderizarMensagens();
   renderizarCatalogo();
-  mostrarTela('login');
+  const perfilPublico = document.getElementById('perfil-publico');
+  if (perfilPublico) {
+    renderizarPerfil(servicos[0]);
+  }
+  const pagamento = document.getElementById('pagamento');
+  if (pagamento) {
+    atualizarPagamento();
+  }
+
+  const rotaAtual = window.location.pathname.replace(/\/+$/, '') || '/inicio';
+  document.querySelectorAll('.main-nav .nav-link').forEach(link => {
+    link.classList.toggle('active', link.getAttribute('href') === rotaAtual);
+  });
 })();
