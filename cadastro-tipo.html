@@ -14,14 +14,14 @@
 <body>
   <main class="auth-screen active">
     <section class="auth-card choice-card">
-      <a class="auth-brand" href="/login">
+      <a class="auth-brand" href="/login.html">
         <img src="/assets/logo-wolfservices.jpg" alt="">
         <span>act Work&amp;Up</span>
       </a>
       <p class="eyebrow registration-eyebrow">Crie sua conta</p>
       <h1 class="registration-title">Cadastrar</h1>
-      <p class="muted registration-intro">Qual tipo de conta deseja criar? Usuários comuns e profissionais autônomos usam o mesmo cadastro.</p>
-      <a class="choice-option" href="/cadastro-pessoal">
+      <p class="muted registration-intro">Escolha como você vai usar a plataforma.</p>
+      <a class="choice-option" href="/cadastro-pessoal.html">
         <span class="choice-icon" aria-hidden="true">
           <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
             <circle cx="12" cy="8" r="4" />
@@ -29,12 +29,25 @@
           </svg>
         </span>
         <span>
-          <strong>Usuário comum ou autônomo</strong>
-          <small>Cadastro pessoal para contratar ou oferecer serviços.</small>
+          <strong>Usuário comum</strong>
+          <small>Para contratar serviços e conversar com profissionais.</small>
         </span>
         <span class="arrow" aria-hidden="true">→</span>
       </a>
-      <a class="choice-option" href="/cadastro-empresa">
+      <a class="choice-option" href="/cadastro-pessoal.html?type=provider">
+        <span class="choice-icon" aria-hidden="true">
+          <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <rect x="3" y="7" width="18" height="13" rx="2" />
+            <path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m-13 5h18m-11 0v2h4v-2" />
+          </svg>
+        </span>
+        <span>
+          <strong>Prestador de serviços</strong>
+          <small>Cadastro pessoal para divulgar e cadastrar seus serviços.</small>
+        </span>
+        <span class="arrow" aria-hidden="true">→</span>
+      </a>
+      <a class="choice-option" href="/cadastro-empresa.html">
         <span class="choice-icon" aria-hidden="true">
           <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
             <rect x="3" y="4" width="18" height="16" rx="2" />
@@ -47,9 +60,9 @@
         </span>
         <span class="arrow" aria-hidden="true">→</span>
       </a>
-      <p class="auth-foot">Já tem uma conta? <a class="inline-action" href="/login">Voltar ao login</a></p>
+      <p class="auth-foot">Já tem uma conta? <a class="inline-action" href="/login.html">Voltar ao login</a></p>
     </section>
   </main>
-  <script src="/script.js?v=6"></script>
+  <script src="/script.js?v=9"></script>
 </body>
 </html>

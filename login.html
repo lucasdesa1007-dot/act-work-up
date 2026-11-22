@@ -16,7 +16,7 @@
 
 <section class="screen auth-screen active" id="login" aria-label="Login">
       <div class="auth-card">
-        <a class="auth-brand" href="/login">
+        <a class="auth-brand" href="/login.html">
           <img src="/assets/logo-wolfservices.jpg" alt="">
           <span>
             act Work&amp;Up
@@ -26,7 +26,7 @@
           <button class="tab active" type="button">
             Login
           </button>
-          <a href="/cadastro-tipo" class="tab">
+          <a href="/cadastro-tipo.html" class="tab">
             Cadastro
           </a>
         </div>
@@ -41,8 +41,15 @@
         </p>
         <form class="form-stack" data-local-form>
           <label>
+            Entrar como
+            <select name="account-type">
+              <option value="common">Usuário comum</option>
+              <option value="provider">Prestador de serviços</option>
+            </select>
+          </label>
+          <label>
             Email
-            <input type="email" placeholder="seuemail@exemplo.com" autocomplete="email" required>
+            <input name="email" type="email" placeholder="seuemail@exemplo.com" autocomplete="email" required>
           </label>
           <label>
             Senha
@@ -58,7 +65,7 @@
         </form>
         <p class="auth-foot">
           Ainda não tem conta?
-          <a href="/cadastro-tipo" class="inline-action">
+          <a href="/cadastro-tipo.html" class="inline-action">
             Cadastre-se
           </a>
         </p>
@@ -66,6 +73,6 @@
     </section>
 
   </div>
-  <script src="/script.js?v=6"></script>
+  <script src="/script.js?v=9"></script>
 </body>
 </html>

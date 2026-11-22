@@ -1,5 +1,80 @@
 /* act Work&Up — catálogo, navegação e interações locais do protótipo */
 (() => {
+  const AUTH_KEY = 'actworkup_auth';
+
+  function normalizarRota(pathname) {
+    return pathname.replace(/\.html$/, '').replace(/\/+$/, '') || '/inicio';
+  }
+
+  function obterSessao() {
+    try {
+      return JSON.parse(sessionStorage.getItem(AUTH_KEY)) || null;
+    } catch {
+      return null;
+    }
+  }
+
+  function salvarSessao(sessao) {
+    sessionStorage.setItem(AUTH_KEY, JSON.stringify(sessao));
+  }
+
+  function encerrarSessao() {
+    sessionStorage.removeItem(AUTH_KEY);
+  }
+
+  function iniciaisDoNome(nome) {
+    const partes = String(nome || '').trim().split(/\s+/).filter(Boolean);
+    if (!partes.length) return 'US';
+    return (partes[0][0] + (partes[1]?.[0] || '')).toUpperCase();
+  }
+
+  function configurarAcesso() {
+    const sessao = obterSessao();
+    const ehPrestador = sessao?.loggedIn && sessao.role === 'provider';
+    const ehUsuarioLogado = Boolean(sessao?.loggedIn);
+
+    document.querySelectorAll('.user-menu').forEach(menu => {
+      if (ehUsuarioLogado) {
+        const nome = sessao.name || (ehPrestador ? 'Prestador' : 'Usuário');
+        menu.innerHTML = `<span class="avatar">${iniciaisDoNome(nome)}</span><span>${nome}</span>`;
+      } else {
+        const acoes = document.createElement('div');
+        acoes.className = 'auth-actions';
+        acoes.innerHTML = '<a href="/login.html" class="btn auth-login">Entrar</a><a href="/cadastro-tipo.html" class="btn auth-register">Cadastrar</a>';
+        menu.replaceWith(acoes);
+      }
+    });
+
+    document.querySelectorAll('.provider-cta, .provider-services').forEach(elemento => {
+      elemento.hidden = !ehPrestador;
+    });
+    document.querySelectorAll('[data-open-service-dialog]').forEach(botao => {
+      botao.hidden = !ehPrestador;
+    });
+    document.querySelectorAll('[data-provider-only]').forEach(elemento => {
+      elemento.hidden = !ehPrestador;
+    });
+    document.querySelectorAll('[data-logged-in-orders]').forEach(elemento => {
+      elemento.hidden = !ehUsuarioLogado;
+    });
+    document.querySelectorAll('[data-visitor-empty]').forEach(elemento => {
+      elemento.hidden = ehUsuarioLogado;
+    });
+    document.querySelectorAll('[data-auth-only]').forEach(elemento => {
+      elemento.hidden = !ehUsuarioLogado;
+    });
+    document.querySelectorAll('[data-auth-required]').forEach(elemento => {
+      elemento.hidden = ehUsuarioLogado;
+    });
+    if (normalizarRota(window.location.pathname) === '/perfil' && ehUsuarioLogado) {
+      const nomePerfil = document.querySelector('.account-mini strong');
+      const nomeInputs = document.querySelectorAll('[name="name"]');
+      if (nomePerfil) nomePerfil.textContent = sessao.name || nomePerfil.textContent;
+      nomeInputs.forEach(input => {
+        if (!input.value) input.value = sessao.name || '';
+      });
+    }
+  }
   /* Profissionais, perfis, avaliações e dúvidas frequentes */
   const profissionais = [
     {
@@ -12,7 +87,7 @@
       bio: 'Sou designer gráfica e ajudo pequenos negócios a construir uma identidade visual consistente e fácil de reconhecer.',
       prazo: 'Primeira proposta em até 5 dias úteis',
       incluidos: ['Reunião de briefing online', 'Logotipo principal e variações', 'Paleta de cores e tipografia', 'Arquivos finais para uso digital'],
-      portfolio: ['photo-1545235617-9465d2a55698', 'photo-1558655146-9f40138edfeb', 'photo-1634942536790-2536d7f0e2e8'],
+      portfolio: ['photo-1545235617-9465d2a55698', 'photo-1558655146-9f40138edfeb', 'photo-1541462608143-67571c6738dd'],
       avaliacoes: [
         ['Mariana Lopes', '5', '12/10/2026', 'A Ana entendeu a proposta da minha marca e entregou tudo muito bem organizado.'],
         ['Pedro Almeida', '5', '28/09/2026', 'Comunicação clara e ótimo cuidado com os detalhes.'],
@@ -355,8 +430,7 @@
   }));
   const perfilUsuario = {
     nome: 'Lucas Silva',
-    iniciais: 'LS',
-    avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=160&h=160&q=80'
+    iniciais: 'LS'
   };
   const gradeExplorar = document.getElementById('explore-grid');
   const gradeInicio = document.querySelector('#inicio .service-grid');
@@ -548,6 +622,8 @@
   function renderizarAvatarComFallback(elemento, profissional) {
     elemento.textContent = profissional.iniciais;
     elemento.setAttribute('aria-label', profissional.nome);
+    if (!profissional.avatar) return;
+
     const imagem = document.createElement('img');
     imagem.src = profissional.avatar;
     imagem.alt = '';
@@ -776,7 +852,7 @@
       return;
     }
 
-    window.location.href = `/servico?service=${encodeURIComponent(servico.id)}`;
+    window.location.href = `/servico.html?service=${encodeURIComponent(servico.id)}`;
   }
 
   function adicionarMensagem(tipo, texto) {
@@ -937,21 +1013,51 @@
         return;
       }
 
+      const rotaFormulario = normalizarRota(window.location.pathname);
+      if (rotaFormulario === '/login') {
+        const tipoConta = formulario.querySelector('[name="account-type"]')?.value || 'common';
+        const email = formulario.querySelector('[name="email"]')?.value || '';
+        const nome = email ? email.split('@')[0].replace(/[._-]+/g, ' ') : 'Usuário';
+        salvarSessao({
+          loggedIn: true,
+          role: tipoConta === 'provider' ? 'provider' : 'common',
+          name: nome.replace(/\b\w/g, letra => letra.toUpperCase()),
+          email
+        });
+      }
+
+      if (rotaFormulario === '/cadastro-pessoal' || rotaFormulario === '/cadastro-empresa') {
+        const dados = new FormData(formulario);
+        const ehEmpresa = rotaFormulario === '/cadastro-empresa';
+        const nome = ehEmpresa
+          ? dados.get('company-name') || 'Empresa'
+          : dados.get('name') || 'Usuário';
+        const tipo = ehEmpresa
+          ? 'provider'
+          : (new URLSearchParams(window.location.search).get('type') === 'provider' ? 'provider' : 'common');
+        salvarSessao({
+          loggedIn: true,
+          role: tipo,
+          name: String(nome),
+          email: String(dados.get('email') || '')
+        });
+      }
+
       const proximaTela = evento.submitter?.dataset.screen;
       if (proximaTela) {
         const rotas = {
-          inicio: '/inicio',
-          explorar: '/explorar',
-          pagamento: '/pagamento',
-          'meus-servicos': '/meus-servicos',
-          mensagens: '/mensagens',
-          'perfil-publico': '/servico',
-          'cadastro-tipo': '/cadastro-tipo',
-          'cadastro-pessoal': '/cadastro-pessoal',
-          'cadastro-empresa': '/cadastro-empresa',
-          login: '/login'
+          inicio: '/inicio.html',
+          explorar: '/explorar.html',
+          pagamento: '/pagamento.html',
+          'meus-servicos': '/meus-servicos.html',
+          mensagens: '/mensagens.html',
+          'perfil-publico': '/servico.html',
+          'cadastro-tipo': '/cadastro-tipo.html',
+          'cadastro-pessoal': '/cadastro-pessoal.html',
+          'cadastro-empresa': '/cadastro-empresa.html',
+          login: '/login.html'
         };
-        window.location.href = rotas[proximaTela] || '/inicio';
+        window.location.href = rotas[proximaTela] || '/inicio.html';
         return;
       }
 
@@ -997,12 +1103,23 @@
     campoPix.value = 'chave-pix-demo@actworkup.com.br';
   }
   document.querySelector('.payment-status')?.setAttribute('role', 'status');
+  const sessaoAtual = obterSessao();
+  const nomeContaAtual = sessaoAtual?.name || perfilUsuario.nome;
   document.querySelectorAll('.user-menu .avatar, .account-mini .avatar, .profile-edit .avatar').forEach(avatar => {
-    renderizarAvatarComFallback(avatar, perfilUsuario);
+    renderizarAvatarComFallback(avatar, {
+      nome: nomeContaAtual,
+      iniciais: iniciaisDoNome(nomeContaAtual)
+    });
+  });
+  configurarAcesso();
+  document.querySelectorAll('a[href="/login.html"].btn.outline.full').forEach(link => {
+    link.addEventListener('click', () => encerrarSessao());
   });
   criarQrVisual();
-  renderizarConversas();
-  renderizarMensagens();
+  if (obterSessao()?.loggedIn) {
+    renderizarConversas();
+    renderizarMensagens();
+  }
   renderizarCatalogo();
   const perfilPublico = document.getElementById('perfil-publico');
   if (perfilPublico) {
@@ -1015,9 +1132,9 @@
     atualizarPagamento();
   }
 
-  const rotaAtual = window.location.pathname.replace(/\/+$/, '') || '/inicio';
+  const rotaAtual = normalizarRota(window.location.pathname);
   document.querySelectorAll('.main-nav .nav-link').forEach(link => {
-    link.classList.toggle('active', link.getAttribute('href') === rotaAtual);
+    link.classList.toggle('active', normalizarRota(new URL(link.href).pathname) === rotaAtual);
   });
 
   const buscaInicial = new URLSearchParams(window.location.search).get('q');
@@ -1044,10 +1161,14 @@
       }
 
       const avatar = document.querySelector('.profile-edit .avatar');
-      const imagem = avatar?.querySelector('img');
-      if (imagem) {
-        imagem.src = URL.createObjectURL(arquivo);
+      if (!avatar) return;
+      let imagem = avatar.querySelector('img');
+      if (!imagem) {
+        imagem = document.createElement('img');
+        imagem.alt = '';
+        avatar.append(imagem);
       }
+      imagem.src = URL.createObjectURL(arquivo);
     });
   }
 })();

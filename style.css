@@ -81,6 +81,9 @@ body {
   font-size: var(--text-sm);
   line-height: 1.6;
 }
+a {
+  text-decoration: none;
+}
 button, input, select, textarea {
   font: inherit;
 }
@@ -198,7 +201,7 @@ h3 {
 }
 .inline-action:hover, .text-action:hover, .back-link:hover {
   color: var(--purple-dark);
-  text-decoration: underline;
+  text-decoration: none;
 }
 .back-link {
   display: inline-block;
@@ -456,6 +459,35 @@ input:focus, select:focus, textarea:focus {
   margin-bottom: 18px;
 }
 /* Navegação principal */
+[hidden] {
+  display: none !important;
+}
+
+.auth-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.auth-actions .btn {
+  min-height: 38px;
+  padding: 9px 13px;
+  font-size: 13px;
+}
+
+.auth-login {
+  color: var(--purple);
+  background: var(--white);
+  border: 1px solid var(--border);
+}
+
+.auth-register {
+  color: var(--white);
+  background: var(--purple);
+  border: 1px solid var(--purple);
+}
+
 .site-header {
   min-height: 76px;
   display: flex;

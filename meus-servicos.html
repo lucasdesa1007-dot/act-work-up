@@ -14,21 +14,21 @@
 <body>
   <div id="app">
 <header class="site-header" id="site-header">
-      <a class="brand" href="/inicio">
+      <a class="brand" href="/inicio.html">
         <img src="assets/logo-wolfservices.jpg" alt="">
         <span>
           act Work&amp;Up
         </span>
       </a>
       <nav class="main-nav" aria-label="Navegação principal">
-        <a href="/inicio" class="nav-link">
+        <a href="/inicio.html" class="nav-link">
           <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
             aria-hidden="true">
             <path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-6v-7h-4v7H4a1 1 0 0 1-1-1V10Z" />
           </svg>
           Início
         </a>
-        <a href="/explorar" class="nav-link">
+        <a href="/explorar.html" class="nav-link">
           <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
             aria-hidden="true">
             <circle cx="11" cy="11" r="7" />
@@ -36,7 +36,7 @@
           </svg>
           Explorar
         </a>
-        <a href="/meus-servicos" class="nav-link active" aria-current="page">
+        <a href="/meus-servicos.html" class="nav-link active" aria-current="page">
           <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
             aria-hidden="true">
             <rect x="3" y="4" width="18" height="16" rx="2" />
@@ -44,7 +44,7 @@
           </svg>
           Meus serviços
         </a>
-        <a href="/mensagens" class="nav-link">
+        <a href="/mensagens.html" class="nav-link">
           <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
             aria-hidden="true">
             <path
@@ -53,7 +53,7 @@
           Mensagens
         </a>
       </nav>
-      <a href="/perfil" class="user-menu">
+      <a href="/perfil.html" class="user-menu">
         <span class="avatar">
           LS
         </span>
@@ -65,7 +65,7 @@
 <section class="screen app-screen active" id="meus-servicos">
       <section class="container page-intro">
         <p class="breadcrumb">
-          <a href="/inicio">
+          <a href="/inicio.html">
             Início
           </a>
           / Meus serviços
@@ -97,7 +97,8 @@
               </h2>
             </div>
           </div>
-          <article class="order-card">
+          <p class="empty-state" data-visitor-empty>Você ainda não tem serviços contratados.</p>
+          <article class="order-card" data-logged-in-orders hidden>
             <span class="status-pill pending">
               <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                 aria-hidden="true">
@@ -106,19 +107,11 @@
               </svg>
               Em andamento
             </span>
-            <h3>
-              Identidade visual
-            </h3>
-            <p>
-              Profissional: Ana Martins · 08/11/2026
-            </p>
+            <h3>Identidade visual</h3>
+            <p>Profissional: Ana Martins · 08/11/2026</p>
             <div class="order-footer">
-              <strong>
-                R$ 180,00
-              </strong>
-              <a href="/mensagens" class="inline-action">
-                Enviar mensagem →
-              </a>
+              <strong>R$ 180,00</strong>
+              <a href="/mensagens.html" class="inline-action">Enviar mensagem →</a>
             </div>
           </article>
         </div>
@@ -137,69 +130,20 @@
           </button>
         </div>
       </section>
-      <section class="container section-block">
+      <section class="container section-block" data-provider-only>
         <div class="section-heading">
           <div>
             <p class="eyebrow">
               Meus anúncios
             </p>
             <h2>
-              Seus serviços ativos/concluídos
+              Seus serviços cadastrados
             </h2>
           </div>
         </div>
-        <article class="order-card wide">
-          <div>
-            <span class="status-pill success">
-              <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                aria-hidden="true">
-                <path d="m5 12 4 4L19 6" />
-              </svg>
-              Ativo
-            </span>
-            <h3>
-              Manutenção residencial
-            </h3>
-            <p>
-              Presencial · Manutenção · Indaiatuba
-            </p>
-          </div>
-          <div>
-            <strong>
-              Sob orçamento
-            </strong>
-            <a href="/servico?service=manutencao-residencial" class="inline-action">
-              Ver serviço →
-            </a>
-          </div>
-        </article>
-        <article class="order-card wide">
-          <div>
-            <span class="status-pill success">
-              <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                aria-hidden="true">
-                <path d="m5 12 4 4L19 6" />
-              </svg>
-              Concluído
-            </span>
-            <h3>
-              Reparo de instalação
-            </h3>
-            <p>
-              Cliente: Maria Souza · 02/11/2026
-            </p>
-          </div>
-          <div>
-            <strong>
-              R$ 120,00
-            </strong>
-            <a href="/mensagens" class="inline-action">
-              Enviar mensagem →
-            </a>
-          </div>
-        </article>
+        <p class="empty-state">Você ainda não cadastrou serviços.</p>
       </section>
-      <dialog class="service-dialog" id="service-dialog" aria-labelledby="service-dialog-title">
+      <dialog class="service-dialog" id="service-dialog" aria-labelledby="service-dialog-title" data-provider-only>
         <div class="service-dialog-header">
           <div>
             <p class="eyebrow">
@@ -283,6 +227,6 @@
       </span>
     </footer>
   </div>
-  <script src="/script.js?v=6"></script>
+  <script src="/script.js?v=9"></script>
 </body>
 </html>
