@@ -585,10 +585,10 @@ input:focus, select:focus, textarea:focus {
   flex-direction: column;
   justify-content: space-between;
   gap: 48px;
-  width: 100vw;
+  width: 100%;
   max-width: none;
   min-height: calc(100svh - 76px);
-  margin: -34px calc(50% - 50vw) 48px;
+  margin: -34px 0 48px;
   padding: clamp(72px, 10vh, 120px) max(24px, calc((100% - var(--content))/2)) 64px;
   overflow: visible;
   color: var(--white);
@@ -1674,7 +1674,7 @@ body:has(.app-screen.active) .site-footer {
     padding-top: 22px;
   }
   .hero {
-    width: 100vw;
+    width: 100%;
     max-width: none;
     min-height: calc(100svh - 112px);
     gap: 48px;
@@ -1986,6 +1986,9 @@ body:has(.app-screen.active) .site-footer {
 @media (max-width: 420px) {
   .container {
     width: calc(100% - 24px);
+  }
+  .app-screen .hero {
+    width: 100%;
   }
   .auth-screen {
     padding: 12px;

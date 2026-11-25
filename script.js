@@ -3,7 +3,8 @@
   const AUTH_KEY = 'actworkup_auth';
 
   function normalizarRota(pathname) {
-    return pathname.replace(/\.html$/, '').replace(/\/+$/, '') || '/inicio';
+    const nomeArquivo = pathname.replace(/\\/g, '/').split('/').pop()?.replace(/\.html$/, '');
+    return nomeArquivo ? `/${nomeArquivo}` : '/inicio';
   }
 
   function obterSessao() {
@@ -40,7 +41,7 @@
       } else {
         const acoes = document.createElement('div');
         acoes.className = 'auth-actions';
-        acoes.innerHTML = '<a href="/login.html" class="btn auth-login">Entrar</a><a href="/cadastro-tipo.html" class="btn auth-register">Cadastrar</a>';
+        acoes.innerHTML = '<a href="login.html" class="btn auth-login">Entrar</a><a href="cadastro-tipo.html" class="btn auth-register">Cadastrar</a>';
         menu.replaceWith(acoes);
       }
     });
@@ -852,7 +853,7 @@
       return;
     }
 
-    window.location.href = `/servico.html?service=${encodeURIComponent(servico.id)}`;
+    window.location.href = `servico.html?service=${encodeURIComponent(servico.id)}`;
   }
 
   function adicionarMensagem(tipo, texto) {
@@ -956,7 +957,7 @@
     formulario.addEventListener('submit', evento => {
       evento.preventDefault();
       const busca = formulario.querySelector('input').value.trim();
-      window.location.href = `/explorar${busca ? `?q=${encodeURIComponent(busca)}` : ''}`;
+      window.location.href = `explorar.html${busca ? `?q=${encodeURIComponent(busca)}` : ''}`;
     });
   });
 
@@ -1046,18 +1047,18 @@
       const proximaTela = evento.submitter?.dataset.screen;
       if (proximaTela) {
         const rotas = {
-          inicio: '/inicio.html',
-          explorar: '/explorar.html',
-          pagamento: '/pagamento.html',
-          'meus-servicos': '/meus-servicos.html',
-          mensagens: '/mensagens.html',
-          'perfil-publico': '/servico.html',
-          'cadastro-tipo': '/cadastro-tipo.html',
-          'cadastro-pessoal': '/cadastro-pessoal.html',
-          'cadastro-empresa': '/cadastro-empresa.html',
-          login: '/login.html'
+          inicio: 'inicio.html',
+          explorar: 'explorar.html',
+          pagamento: 'pagamento.html',
+          'meus-servicos': 'meus-servicos.html',
+          mensagens: 'mensagens.html',
+          'perfil-publico': 'servico.html',
+          'cadastro-tipo': 'cadastro-tipo.html',
+          'cadastro-pessoal': 'cadastro-pessoal.html',
+          'cadastro-empresa': 'cadastro-empresa.html',
+          login: 'login.html'
         };
-        window.location.href = rotas[proximaTela] || '/inicio.html';
+        window.location.href = rotas[proximaTela] || 'inicio.html';
         return;
       }
 
@@ -1112,7 +1113,7 @@
     });
   });
   configurarAcesso();
-  document.querySelectorAll('a[href="/login.html"].btn.outline.full').forEach(link => {
+  document.querySelectorAll('a[href="login.html"].btn.outline.full').forEach(link => {
     link.addEventListener('click', () => encerrarSessao());
   });
   criarQrVisual();
